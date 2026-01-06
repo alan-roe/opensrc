@@ -2,7 +2,7 @@ import { readFile, writeFile } from 'fs/promises';
 import { join } from 'path';
 import { existsSync } from 'fs';
 
-const OPENSRC_ENTRY = '.opensrc/';
+const OPENSRC_ENTRY = 'opensrc/';
 const MARKER_COMMENT = '# opensrc - source code for packages';
 
 /**
@@ -21,7 +21,7 @@ export async function hasOpensrcEntry(cwd: string = process.cwd()): Promise<bool
     
     return lines.some(line => {
       const trimmed = line.trim();
-      return trimmed === OPENSRC_ENTRY || trimmed === '.opensrc';
+      return trimmed === OPENSRC_ENTRY || trimmed === 'opensrc';
     });
   } catch {
     return false;
@@ -77,7 +77,7 @@ export async function removeFromGitignore(cwd: string = process.cwd()): Promise<
       const trimmed = line.trim();
       return (
         trimmed !== OPENSRC_ENTRY &&
-        trimmed !== '.opensrc' &&
+        trimmed !== 'opensrc' &&
         trimmed !== MARKER_COMMENT
       );
     });

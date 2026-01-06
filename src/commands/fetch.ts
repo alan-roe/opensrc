@@ -20,10 +20,10 @@ export async function fetchCommand(
   const cwd = options.cwd || process.cwd();
   const results: FetchResult[] = [];
   
-  // Ensure .gitignore has .opensrc/ entry
+  // Ensure .gitignore has opensrc/ entry
   const gitignoreUpdated = await ensureGitignore(cwd);
   if (gitignoreUpdated) {
-    console.log('✓ Added .opensrc/ to .gitignore');
+    console.log('✓ Added opensrc/ to .gitignore');
   }
   
   for (const spec of packages) {

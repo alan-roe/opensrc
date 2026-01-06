@@ -44,24 +44,24 @@ opensrc remove zod
 1. Queries the npm registry to find the package's repository URL
 2. Detects the installed version from your `package.json` or lockfile
 3. Clones the repository at the matching git tag
-4. Stores the source in `.opensrc/<package-name>/`
-5. Automatically adds `.opensrc/` to your `.gitignore`
+4. Stores the source in `opensrc/<package-name>/`
+5. Automatically adds `opensrc/` to your `.gitignore`
 
 ## Output
 
 After running `opensrc zod`:
 
 ```
-.opensrc/
+opensrc/
 └── zod/
     ├── src/
     ├── package.json
     └── ...
 ```
 
-Your AI coding agent can then read `.opensrc/zod/src/` to understand internals.
+Your AI coding agent can then read `opensrc/zod/src/` to understand internals.
 
 ## License
 
-MIT
+Apache-2.0
 

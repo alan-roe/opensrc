@@ -4,7 +4,7 @@ import { join } from 'path';
 import { existsSync } from 'fs';
 import type { ResolvedPackage, FetchResult } from '../types.js';
 
-const OPENSRC_DIR = '.opensrc';
+const OPENSRC_DIR = 'opensrc';
 
 /**
  * Get the opensrc directory path
