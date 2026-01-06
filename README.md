@@ -23,7 +23,7 @@ npx opensrc <package>
 ## Usage
 
 ```bash
-# Fetch source for a package (auto-detects version from package.json)
+# Fetch source for a package (auto-detects version from lockfile)
 opensrc zod
 
 # Fetch specific version
@@ -39,13 +39,16 @@ opensrc list
 opensrc remove zod
 ```
 
+Re-running `opensrc <package>` automatically updates to match your installed version—no flags needed.
+
 ## How it works
 
 1. Queries the npm registry to find the package's repository URL
-2. Detects the installed version from your `package.json` or lockfile
+2. Detects the installed version from your lockfile (`package-lock.json`, `pnpm-lock.yaml`, `yarn.lock`)
 3. Clones the repository at the matching git tag
 4. Stores the source in `opensrc/<package-name>/`
-5. Automatically adds `opensrc/` to your `.gitignore`
+5. Adds `opensrc/` to `.gitignore`
+6. Updates `AGENTS.md` to point agents to the source code
 
 ## Output
 
@@ -53,15 +56,23 @@ After running `opensrc zod`:
 
 ```
 opensrc/
+├── sources.json        # Index of fetched packages
 └── zod/
     ├── src/
     ├── package.json
     └── ...
 ```
 
-Your AI coding agent can then read `opensrc/zod/src/` to understand internals.
+The `sources.json` file lists all fetched packages with their versions, so agents know what's available:
+
+```json
+{
+  "packages": [
+    { "name": "zod", "version": "3.22.0", "path": "opensrc/zod" }
+  ]
+}
+```
 
 ## License
 
 Apache-2.0
-
