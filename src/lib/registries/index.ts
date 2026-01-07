@@ -93,9 +93,7 @@ export async function resolvePackage(
 /**
  * Detect whether the input is a package or a repo
  */
-export function detectInputType(
-  spec: string,
-): "package" | "repo" {
+export function detectInputType(spec: string): "package" | "repo" {
   const trimmed = spec.trim();
 
   // Check for explicit registry prefix -> package
@@ -113,4 +111,3 @@ export function detectInputType(
   // Default to package
   return "package";
 }
-

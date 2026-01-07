@@ -95,9 +95,7 @@ describe("parseRepoSpec", () => {
     });
 
     it("parses https://github.com/owner/repo/tree/branch", () => {
-      const result = parseRepoSpec(
-        "https://github.com/vercel/ai/tree/canary",
-      );
+      const result = parseRepoSpec("https://github.com/vercel/ai/tree/canary");
       expect(result).toEqual({
         host: "github.com",
         owner: "vercel",
@@ -337,4 +335,3 @@ describe("displayNameToOwnerRepo", () => {
     expect(displayNameToOwnerRepo("vercel/ai")).toBeNull();
   });
 });
-

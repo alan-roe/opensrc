@@ -39,7 +39,10 @@ describe("hasOpensrcSection", () => {
   });
 
   it("returns true if AGENTS.md has the opensrc section", async () => {
-    await writeFile(AGENTS_FILE, `# AGENTS.md\n\n${SECTION_MARKER}\nContent\n${SECTION_END_MARKER}`);
+    await writeFile(
+      AGENTS_FILE,
+      `# AGENTS.md\n\n${SECTION_MARKER}\nContent\n${SECTION_END_MARKER}`,
+    );
     expect(await hasOpensrcSection(TEST_DIR)).toBe(true);
   });
 });
@@ -136,7 +139,12 @@ describe("updatePackageIndex", () => {
     const sources = {
       packages: [],
       repos: [
-        { name: "github.com/vercel/ai", version: "main", path: "repos/github.com/vercel/ai", fetchedAt: "2024-01-01T00:00:00.000Z" },
+        {
+          name: "github.com/vercel/ai",
+          version: "main",
+          path: "repos/github.com/vercel/ai",
+          fetchedAt: "2024-01-01T00:00:00.000Z",
+        },
       ],
     };
 
@@ -151,7 +159,12 @@ describe("updatePackageIndex", () => {
     const sources = {
       packages: [],
       repos: [
-        { name: "github.com/vercel/ai", version: "main", path: "repos/github.com/vercel/ai", fetchedAt: "2024-01-01T00:00:00.000Z" },
+        {
+          name: "github.com/vercel/ai",
+          version: "main",
+          path: "repos/github.com/vercel/ai",
+          fetchedAt: "2024-01-01T00:00:00.000Z",
+        },
       ],
     };
 

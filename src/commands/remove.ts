@@ -5,7 +5,11 @@ import {
   listSources,
   getPackageInfo,
 } from "../lib/git.js";
-import { updateAgentsMd, type PackageEntry, type RepoEntry } from "../lib/agents.js";
+import {
+  updateAgentsMd,
+  type PackageEntry,
+  type RepoEntry,
+} from "../lib/agents.js";
 import { isRepoSpec } from "../lib/repo.js";
 import { detectRegistry } from "../lib/registries/index.js";
 import type { Registry } from "../types.js";
@@ -31,7 +35,8 @@ export async function removeCommand(
 
   for (const item of items) {
     // Check if it's a repo or package based on format
-    const isRepo = isRepoSpec(item) || (item.includes("/") && !item.includes(":"));
+    const isRepo =
+      isRepoSpec(item) || (item.includes("/") && !item.includes(":"));
 
     if (isRepo) {
       // Try to remove as repo
@@ -111,18 +116,24 @@ export async function removeCommand(
   // Update sources.json with remaining sources
   if (removed > 0) {
     const sources = await listSources(cwd);
-    
+
     // Filter out removed packages
     const remainingPackages: PackageEntry[] = sources.packages.filter(
-      p => !removedPackages.some(rp => rp.name === p.name && rp.registry === p.registry)
+      (p) =>
+        !removedPackages.some(
+          (rp) => rp.name === p.name && rp.registry === p.registry,
+        ),
     );
 
     // Filter out removed repos
     const remainingRepos: RepoEntry[] = sources.repos.filter(
-      r => !removedRepos.includes(r.name)
+      (r) => !removedRepos.includes(r.name),
     );
 
-    const agentsUpdated = await updateAgentsMd({ packages: remainingPackages, repos: remainingRepos }, cwd);
+    const agentsUpdated = await updateAgentsMd(
+      { packages: remainingPackages, repos: remainingRepos },
+      cwd,
+    );
     if (agentsUpdated) {
       const totalRemaining = remainingPackages.length + remainingRepos.length;
       if (totalRemaining === 0) {

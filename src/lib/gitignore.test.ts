@@ -138,7 +138,10 @@ describe("removeFromGitignore", () => {
   });
 
   it("removes marker comment", async () => {
-    await writeFile(GITIGNORE_PATH, "node_modules/\n\n# opensrc - source code for packages\nopensrc/\n");
+    await writeFile(
+      GITIGNORE_PATH,
+      "node_modules/\n\n# opensrc - source code for packages\nopensrc/\n",
+    );
 
     await removeFromGitignore(TEST_DIR);
 
@@ -148,7 +151,10 @@ describe("removeFromGitignore", () => {
   });
 
   it("cleans up multiple consecutive blank lines", async () => {
-    await writeFile(GITIGNORE_PATH, "node_modules/\n\n\n\nopensrc/\n\n\n\ndist/\n");
+    await writeFile(
+      GITIGNORE_PATH,
+      "node_modules/\n\n\n\nopensrc/\n\n\n\ndist/\n",
+    );
 
     await removeFromGitignore(TEST_DIR);
 
@@ -157,4 +163,3 @@ describe("removeFromGitignore", () => {
     expect(content).not.toMatch(/\n{3,}/);
   });
 });
-

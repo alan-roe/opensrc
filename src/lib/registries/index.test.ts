@@ -1,9 +1,5 @@
 import { describe, it, expect } from "vitest";
-import {
-  detectRegistry,
-  parsePackageSpec,
-  detectInputType,
-} from "./index.js";
+import { detectRegistry, parsePackageSpec, detectInputType } from "./index.js";
 
 describe("detectRegistry", () => {
   describe("npm registry", () => {

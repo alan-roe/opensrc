@@ -87,10 +87,7 @@ describe("ensureTsconfigExclude", () => {
   });
 
   it("returns false if opensrc already in exclude", async () => {
-    await writeFile(
-      TSCONFIG_PATH,
-      JSON.stringify({ exclude: ["opensrc"] }),
-    );
+    await writeFile(TSCONFIG_PATH, JSON.stringify({ exclude: ["opensrc"] }));
 
     const result = await ensureTsconfigExclude(TEST_DIR);
     expect(result).toBe(false);
@@ -170,4 +167,3 @@ describe("ensureTsconfigExclude", () => {
     expect(result).toBe(false);
   });
 });
-

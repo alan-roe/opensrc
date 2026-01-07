@@ -30,7 +30,9 @@ export function getReposDir(cwd: string = process.cwd()): string {
 /**
  * Extract host/owner/repo from a git URL
  */
-export function parseRepoUrl(url: string): { host: string; owner: string; repo: string } | null {
+export function parseRepoUrl(
+  url: string,
+): { host: string; owner: string; repo: string } | null {
   // Handle HTTPS URLs: https://github.com/owner/repo
   const httpsMatch = url.match(/https?:\/\/([^/]+)\/([^/]+)\/([^/]+)/);
   if (httpsMatch) {
@@ -103,7 +105,7 @@ async function readSourcesJson(cwd: string): Promise<{
   repos?: RepoEntry[];
 } | null> {
   const sourcesPath = join(getOpensrcDir(cwd), SOURCES_FILE);
-  
+
   if (!existsSync(sourcesPath)) {
     return null;
   }
@@ -150,8 +152,12 @@ export async function getPackageInfo(
   if (!sources?.packages) {
     return null;
   }
-  
-  return sources.packages.find(p => p.name === packageName && p.registry === registry) || null;
+
+  return (
+    sources.packages.find(
+      (p) => p.name === packageName && p.registry === registry,
+    ) || null
+  );
 }
 
 /**
@@ -165,8 +171,8 @@ export async function getRepoInfo(
   if (!sources?.repos) {
     return null;
   }
-  
-  return sources.repos.find(r => r.name === displayName) || null;
+
+  return sources.repos.find((r) => r.name === displayName) || null;
 }
 
 /**
@@ -257,7 +263,7 @@ export async function fetchSource(
   cwd: string = process.cwd(),
 ): Promise<FetchResult> {
   const git = simpleGit();
-  
+
   // Get repo display name from URL
   const repoDisplayName = getRepoDisplayName(resolved.repoUrl);
   if (!repoDisplayName) {
@@ -417,7 +423,9 @@ export async function removePackageSource(
     return { removed: false, repoRemoved: false };
   }
 
-  const pkg = sources.packages.find(p => p.name === packageName && p.registry === registry);
+  const pkg = sources.packages.find(
+    (p) => p.name === packageName && p.registry === registry,
+  );
   if (!pkg) {
     return { removed: false, repoRemoved: false };
   }
@@ -426,7 +434,9 @@ export async function removePackageSource(
 
   // Check if other packages use the same repo
   const otherPackagesUsingSameRepo = sources.packages.filter(
-    p => extractRepoPath(p.path) === pkgRepoPath && !(p.name === packageName && p.registry === registry)
+    (p) =>
+      extractRepoPath(p.path) === pkgRepoPath &&
+      !(p.name === packageName && p.registry === registry),
   );
 
   let repoRemoved = false;
@@ -470,7 +480,10 @@ export async function removeRepoSource(
 /**
  * Clean up empty parent directories after removing a repo
  */
-async function cleanupEmptyParentDirs(relativePath: string, cwd: string): Promise<void> {
+async function cleanupEmptyParentDirs(
+  relativePath: string,
+  cwd: string,
+): Promise<void> {
   const parts = relativePath.split("/");
   if (parts.length < 4) return; // repos/host/owner/repo - need at least 4 parts
 
@@ -519,7 +532,7 @@ export async function listSources(cwd: string = process.cwd()): Promise<{
   repos: RepoEntry[];
 }> {
   const sources = await readSourcesJson(cwd);
-  
+
   return {
     packages: sources?.packages || [],
     repos: sources?.repos || [],

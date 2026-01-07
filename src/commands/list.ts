@@ -112,7 +112,9 @@ export async function listCommand(options: ListOptions = {}): Promise<void> {
     .join(", ");
 
   const summary = [
-    registryCounts ? `${sources.packages.length} package(s) (${registryCounts})` : null,
+    registryCounts
+      ? `${sources.packages.length} package(s) (${registryCounts})`
+      : null,
     sources.repos.length > 0 ? `${sources.repos.length} repo(s)` : null,
   ]
     .filter(Boolean)

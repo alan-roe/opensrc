@@ -1,7 +1,11 @@
 import { rm } from "fs/promises";
 import { existsSync } from "fs";
 import { getReposDir, listSources } from "../lib/git.js";
-import { updateAgentsMd, type PackageEntry, type RepoEntry } from "../lib/agents.js";
+import {
+  updateAgentsMd,
+  type PackageEntry,
+  type RepoEntry,
+} from "../lib/agents.js";
 import type { Registry } from "../types.js";
 
 export interface CleanOptions {
@@ -38,8 +42,12 @@ export async function cleanCommand(options: CleanOptions = {}): Promise<void> {
   let packagesToRemove: PackageEntry[] = [];
   if (cleanPackages) {
     if (options.registry) {
-      packagesToRemove = sources.packages.filter(p => p.registry === options.registry);
-      remainingPackages = sources.packages.filter(p => p.registry !== options.registry);
+      packagesToRemove = sources.packages.filter(
+        (p) => p.registry === options.registry,
+      );
+      remainingPackages = sources.packages.filter(
+        (p) => p.registry !== options.registry,
+      );
     } else {
       packagesToRemove = sources.packages;
       remainingPackages = [];
@@ -65,13 +73,17 @@ export async function cleanCommand(options: CleanOptions = {}): Promise<void> {
   };
 
   // Get unique repo paths from packages being removed
-  const packageRepoPaths = new Set(packagesToRemove.map(p => extractRepoPath(p.path)));
-  
+  const packageRepoPaths = new Set(
+    packagesToRemove.map((p) => extractRepoPath(p.path)),
+  );
+
   // Get repo paths from repos being removed
-  const repoRepoPaths = new Set(reposToRemove.map(r => r.path));
+  const repoRepoPaths = new Set(reposToRemove.map((r) => r.path));
 
   // Get repo paths that are still needed by remaining packages
-  const neededRepoPaths = new Set(remainingPackages.map(p => extractRepoPath(p.path)));
+  const neededRepoPaths = new Set(
+    remainingPackages.map((p) => extractRepoPath(p.path)),
+  );
 
   // Combine all repo paths to potentially remove
   const allRepoPaths = new Set([...packageRepoPaths, ...repoRepoPaths]);
@@ -95,7 +107,9 @@ export async function cleanCommand(options: CleanOptions = {}): Promise<void> {
   // Summary
   if (cleanPackages) {
     if (options.registry) {
-      console.log(`✓ Removed ${packagesRemoved} ${options.registry} package(s)`);
+      console.log(
+        `✓ Removed ${packagesRemoved} ${options.registry} package(s)`,
+      );
     } else if (packagesRemoved > 0) {
       console.log(`✓ Removed ${packagesRemoved} package(s)`);
     } else {
@@ -115,7 +129,10 @@ export async function cleanCommand(options: CleanOptions = {}): Promise<void> {
 
   if (totalRemoved > 0) {
     // Update sources.json and AGENTS.md
-    await updateAgentsMd({ packages: remainingPackages, repos: remainingRepos }, cwd);
+    await updateAgentsMd(
+      { packages: remainingPackages, repos: remainingRepos },
+      cwd,
+    );
 
     const totalRemaining = remainingPackages.length + remainingRepos.length;
 
@@ -132,10 +149,10 @@ export async function cleanCommand(options: CleanOptions = {}): Promise<void> {
  */
 async function cleanupEmptyDirs(dir: string): Promise<boolean> {
   const { readdir, rmdir } = await import("fs/promises");
-  
+
   try {
     const entries = await readdir(dir, { withFileTypes: true });
-    
+
     // Recursively clean subdirectories first
     for (const entry of entries) {
       if (entry.isDirectory()) {
@@ -143,7 +160,7 @@ async function cleanupEmptyDirs(dir: string): Promise<boolean> {
         await cleanupEmptyDirs(subdir);
       }
     }
-    
+
     // Check if directory is now empty
     const remaining = await readdir(dir);
     if (remaining.length === 0) {
@@ -153,6 +170,6 @@ async function cleanupEmptyDirs(dir: string): Promise<boolean> {
   } catch {
     // Ignore errors
   }
-  
+
   return false;
 }

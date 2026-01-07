@@ -143,14 +143,18 @@ describe("existence checks", () => {
 
   describe("packageRepoExists", () => {
     it("returns false if repo does not exist", () => {
-      expect(packageRepoExists("https://github.com/vercel/ai", TEST_DIR)).toBe(false);
+      expect(packageRepoExists("https://github.com/vercel/ai", TEST_DIR)).toBe(
+        false,
+      );
     });
 
     it("returns true if repo exists", async () => {
       const repoDir = join(OPENSRC_DIR, "repos", "github.com", "vercel", "ai");
       await mkdir(repoDir, { recursive: true });
 
-      expect(packageRepoExists("https://github.com/vercel/ai", TEST_DIR)).toBe(true);
+      expect(packageRepoExists("https://github.com/vercel/ai", TEST_DIR)).toBe(
+        true,
+      );
     });
 
     it("returns false for invalid URL", () => {
@@ -178,13 +182,15 @@ describe("sources.json reading", () => {
       await writeFile(
         join(OPENSRC_DIR, "sources.json"),
         JSON.stringify({
-          packages: [{
-            name: "zod",
-            version: "3.22.0",
-            registry: "npm",
-            path: "repos/github.com/colinhacks/zod",
-            fetchedAt: "2024-01-01",
-          }],
+          packages: [
+            {
+              name: "zod",
+              version: "3.22.0",
+              registry: "npm",
+              path: "repos/github.com/colinhacks/zod",
+              fetchedAt: "2024-01-01",
+            },
+          ],
         }),
       );
 
@@ -202,13 +208,15 @@ describe("sources.json reading", () => {
       await writeFile(
         join(OPENSRC_DIR, "sources.json"),
         JSON.stringify({
-          packages: [{
-            name: "zod",
-            version: "3.22.0",
-            registry: "npm",
-            path: "repos/github.com/colinhacks/zod",
-            fetchedAt: "2024-01-01",
-          }],
+          packages: [
+            {
+              name: "zod",
+              version: "3.22.0",
+              registry: "npm",
+              path: "repos/github.com/colinhacks/zod",
+              fetchedAt: "2024-01-01",
+            },
+          ],
         }),
       );
 
@@ -234,7 +242,14 @@ describe("sources.json reading", () => {
       await writeFile(
         join(OPENSRC_DIR, "sources.json"),
         JSON.stringify({
-          repos: [{ name: "github.com/vercel/ai", version: "main", path: "repos/github.com/vercel/ai", fetchedAt: "2024-01-01" }],
+          repos: [
+            {
+              name: "github.com/vercel/ai",
+              version: "main",
+              path: "repos/github.com/vercel/ai",
+              fetchedAt: "2024-01-01",
+            },
+          ],
         }),
       );
 
@@ -262,10 +277,29 @@ describe("sources.json reading", () => {
         join(OPENSRC_DIR, "sources.json"),
         JSON.stringify({
           packages: [
-            { name: "zod", version: "3.22.0", registry: "npm", path: "repos/github.com/colinhacks/zod", fetchedAt: "2024-01-01" },
-            { name: "requests", version: "2.31.0", registry: "pypi", path: "repos/github.com/psf/requests", fetchedAt: "2024-01-01" },
+            {
+              name: "zod",
+              version: "3.22.0",
+              registry: "npm",
+              path: "repos/github.com/colinhacks/zod",
+              fetchedAt: "2024-01-01",
+            },
+            {
+              name: "requests",
+              version: "2.31.0",
+              registry: "pypi",
+              path: "repos/github.com/psf/requests",
+              fetchedAt: "2024-01-01",
+            },
           ],
-          repos: [{ name: "github.com/vercel/ai", version: "main", path: "repos/github.com/vercel/ai", fetchedAt: "2024-01-01" }],
+          repos: [
+            {
+              name: "github.com/vercel/ai",
+              version: "main",
+              path: "repos/github.com/vercel/ai",
+              fetchedAt: "2024-01-01",
+            },
+          ],
         }),
       );
 
@@ -288,19 +322,27 @@ describe("removal functions", () => {
     });
 
     it("removes repo when package is the only user", async () => {
-      const repoDir = join(OPENSRC_DIR, "repos", "github.com", "colinhacks", "zod");
+      const repoDir = join(
+        OPENSRC_DIR,
+        "repos",
+        "github.com",
+        "colinhacks",
+        "zod",
+      );
       await mkdir(repoDir, { recursive: true });
       await writeFile(join(repoDir, "package.json"), "{}");
       await writeFile(
         join(OPENSRC_DIR, "sources.json"),
         JSON.stringify({
-          packages: [{
-            name: "zod",
-            version: "3.22.0",
-            registry: "npm",
-            path: "repos/github.com/colinhacks/zod",
-            fetchedAt: "2024-01-01",
-          }],
+          packages: [
+            {
+              name: "zod",
+              version: "3.22.0",
+              registry: "npm",
+              path: "repos/github.com/colinhacks/zod",
+              fetchedAt: "2024-01-01",
+            },
+          ],
         }),
       );
 
@@ -311,7 +353,13 @@ describe("removal functions", () => {
     });
 
     it("does not remove repo when other packages share it", async () => {
-      const repoDir = join(OPENSRC_DIR, "repos", "github.com", "owner", "monorepo");
+      const repoDir = join(
+        OPENSRC_DIR,
+        "repos",
+        "github.com",
+        "owner",
+        "monorepo",
+      );
       await mkdir(repoDir, { recursive: true });
       await writeFile(join(repoDir, "package.json"), "{}");
       await writeFile(
@@ -365,20 +413,30 @@ describe("removal functions", () => {
 
       await removeRepoSource("github.com/vercel/ai", TEST_DIR);
 
-      expect(existsSync(join(OPENSRC_DIR, "repos", "github.com", "vercel"))).toBe(false);
+      expect(
+        existsSync(join(OPENSRC_DIR, "repos", "github.com", "vercel")),
+      ).toBe(false);
       expect(existsSync(join(OPENSRC_DIR, "repos", "github.com"))).toBe(false);
     });
 
     it("does not remove owner dir if other repos exist", async () => {
       const repo1Dir = join(OPENSRC_DIR, "repos", "github.com", "vercel", "ai");
-      const repo2Dir = join(OPENSRC_DIR, "repos", "github.com", "vercel", "next.js");
+      const repo2Dir = join(
+        OPENSRC_DIR,
+        "repos",
+        "github.com",
+        "vercel",
+        "next.js",
+      );
       await mkdir(repo1Dir, { recursive: true });
       await mkdir(repo2Dir, { recursive: true });
 
       await removeRepoSource("github.com/vercel/ai", TEST_DIR);
 
       expect(existsSync(repo1Dir)).toBe(false);
-      expect(existsSync(join(OPENSRC_DIR, "repos", "github.com", "vercel"))).toBe(true);
+      expect(
+        existsSync(join(OPENSRC_DIR, "repos", "github.com", "vercel")),
+      ).toBe(true);
     });
   });
 });

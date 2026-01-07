@@ -18,7 +18,12 @@ import {
 } from "../lib/git.js";
 import { ensureGitignore } from "../lib/gitignore.js";
 import { ensureTsconfigExclude } from "../lib/tsconfig.js";
-import { updateAgentsMd, updatePackageIndex, type PackageEntry, type RepoEntry } from "../lib/agents.js";
+import {
+  updateAgentsMd,
+  updatePackageIndex,
+  type PackageEntry,
+  type RepoEntry,
+} from "../lib/agents.js";
 import {
   getFileModificationPermission,
   setFileModificationPermission,
@@ -215,7 +220,7 @@ async function fetchPackageInput(
       name,
       version,
     });
-    
+
     const repoDisplayName = getRepoDisplayName(resolved.repoUrl);
     console.log(`  → Found: ${resolved.repoUrl}`);
 
