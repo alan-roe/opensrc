@@ -5,6 +5,14 @@ const SUPPORTED_HOSTS = ["github.com", "gitlab.com", "bitbucket.org"];
 const DEFAULT_HOST = "github.com";
 
 /**
+ * Get a GitHub API token from the environment.
+ * Checks GITHUB_TOKEN and GH_TOKEN (used by the gh CLI).
+ */
+function getGitHubToken(): string | undefined {
+  return process.env.GITHUB_TOKEN || process.env.GH_TOKEN;
+}
+
+/**
  * Parse a repository specification into host, owner and repo
  * Supports:
  * - github:owner/repo
@@ -197,12 +205,17 @@ async function resolveGitHubRepo(
 ): Promise<ResolvedRepo> {
   const apiUrl = `https://api.github.com/repos/${owner}/${repo}`;
 
-  const response = await fetch(apiUrl, {
-    headers: {
-      Accept: "application/vnd.github.v3+json",
-      "User-Agent": "opensrc-cli",
-    },
-  });
+  const headers: Record<string, string> = {
+    Accept: "application/vnd.github.v3+json",
+    "User-Agent": "opensrc-cli",
+  };
+
+  const token = getGitHubToken();
+  if (token) {
+    headers["Authorization"] = `Bearer ${token}`;
+  }
+
+  const response = await fetch(apiUrl, { headers });
 
   if (!response.ok) {
     if (response.status === 404) {
@@ -213,7 +226,10 @@ async function resolveGitHubRepo(
     }
     if (response.status === 403) {
       throw new Error(
-        `GitHub API rate limit exceeded. Try again later or authenticate.`,
+        `GitHub API rate limit exceeded. ` +
+          (token
+            ? `Authenticated requests allow 5,000/hour.`
+            : `Set GITHUB_TOKEN or GH_TOKEN for 5,000 requests/hour (currently using unauthenticated limit of 60/hour).`),
       );
     }
     throw new Error(
