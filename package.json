@@ -15,7 +15,6 @@
     "url": "https://github.com/vercel-labs/opensrc"
   },
   "scripts": {
-    "prepare": "tsc",
     "build": "tsc",
     "dev": "tsc --watch",
     "start": "node dist/index.js",
