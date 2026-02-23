@@ -1,3 +1,4 @@
+import { execSync } from "node:child_process";
 import type { RepoSpec, ResolvedRepo } from "../types.js";
 
 // Supported git hosts
@@ -5,11 +6,17 @@ const SUPPORTED_HOSTS = ["github.com", "gitlab.com", "bitbucket.org"];
 const DEFAULT_HOST = "github.com";
 
 /**
- * Get a GitHub API token from the environment.
- * Checks GITHUB_TOKEN and GH_TOKEN (used by the gh CLI).
+ * Get a GitHub API token from the environment or the gh CLI.
+ * Priority: GITHUB_TOKEN > GH_TOKEN > `gh auth token`
  */
 function getGitHubToken(): string | undefined {
-  return process.env.GITHUB_TOKEN || process.env.GH_TOKEN;
+  if (process.env.GITHUB_TOKEN) return process.env.GITHUB_TOKEN;
+  if (process.env.GH_TOKEN) return process.env.GH_TOKEN;
+  try {
+    return execSync("gh auth token", { encoding: "utf-8", timeout: 3000 }).trim() || undefined;
+  } catch {
+    return undefined;
+  }
 }
 
 /**
